@@ -2,8 +2,10 @@
  Mitchell's Serializable Format
 
 An object serializable format similar to JSON I designed for use in my own projects.
+Built using C#.
 
+To create an MSFObject call 'x = MSF.Serialize(source)' where 'source' is a string containing the MSF source code.
 
-To create an MSFObject call 'MSF.Serialize(source)' where 'source' is a string containing the MSF source code.
+To access the nodes in an object call 'x[key]' where 'key' is a string key matching the node you wish to access.
 
-To access the nodes in an object call 'x[key]'
+An MSFNode contains a string 'Key' and an object 'Value' which can either be an integer, string, MSFObject, or List<MSFOBject>
