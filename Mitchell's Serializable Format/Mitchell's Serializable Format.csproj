@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>FTG.Studios</RootNamespace>
+    <Authors>Mitchell Garrett</Authors>
+    <Company>FTG Studios</Company>
+    <Copyright>2021</Copyright>
+  </PropertyGroup>
+
+</Project>
