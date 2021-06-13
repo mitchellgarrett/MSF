@@ -118,6 +118,8 @@ namespace FTG.Studios {
             } else if (Regex.IsMatch(tokens.Peek(), number_literal)) { // Integer
                 node.Value = int.Parse(tokens.Dequeue());
 
+            } else if (Match(tokens.Peek(), open_brace)) { // Object
+                node.Value = ParseObject(tokens);
             } else if (Match(tokens.Peek(), open_bracket)) { // List
                 tokens.Dequeue();
 
@@ -192,7 +194,7 @@ namespace FTG.Studios {
 
     public class MSFNode {
         public string Key;
-        public object Value; // Integer, string, list
+        public object Value; // Integer, string, object, list
 
         public override string ToString() {
             return MSF.Serialize(this);

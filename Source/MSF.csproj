@@ -6,6 +6,8 @@
     <Authors>Mitchell Garrett</Authors>
     <Company>FTG Studios</Company>
     <Copyright>2021</Copyright>
+    <PackageProjectUrl>https://github.com/mitchellgarrett/MSF</PackageProjectUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>

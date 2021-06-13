@@ -1,0 +1,23 @@
+{
+	FirstName = "John";
+	LastName = "Smith";
+	Age = 27;
+	
+	Address = {
+		Street = "1st Street";
+		City = "New York";
+		State = "NY";
+		ZipCode = "10000";
+	};
+	
+	PhoneNumbers = [
+		{
+			Type = "Home";
+			Number = "(000) 000-0000";
+		},
+		{
+			Type = "Work";
+			Number = "(000) 111-1111";
+		}
+	];
+}
