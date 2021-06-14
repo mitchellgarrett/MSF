@@ -1,4 +1,4 @@
-# Mitchell's Serializable Format (MSF)
+# Mitchell's Serialization Format (MSF)
 
 An object serializable format similar to JSON I designed for use in my own projects.
 Built using C#.
