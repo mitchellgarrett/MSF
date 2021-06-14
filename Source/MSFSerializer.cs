@@ -46,18 +46,29 @@ namespace FTG.Studios {
             // Print node key
             value += $"{node.Key} {assignment} ";
 
-            if (node.Value is List<MSFObject>) { // List, print all of its values
-                value += open_bracket;
-                foreach (MSFObject msf in node.Value as List<MSFObject>) value += Serialize(msf) + separator + " ";
-                value += close_bracket;
-            } else if (node.Value is string) { // String
-                value += double_quote + node.Value.ToString() + double_quote;
-            } else { // Anything else
-                value += node.Value.ToString();
-            }
+            value += Serialize(node.Value);
 
             value += semicolon;
             value += '\n';
+            return value;
+        }
+
+        // Conver an MSFNode value to a string
+        static string Serialize(object obj) {
+            string value = string.Empty;
+            if (obj is List<object>) { // List, print all of its values
+                value += open_bracket;
+                List<object> list = obj as List<object>;
+                for (int i = 0; i < list.Count; ++i) {
+                    value += Serialize(list[i]);
+                    if (i < list.Count - 1) value += separator + " ";
+                }
+                value += close_bracket;
+            } else if (value is string) { // String
+                value += double_quote + obj.ToString() + double_quote;
+            } else { // Anything else
+                value += obj.ToString();
+            }
             return value;
         }
 
@@ -109,37 +120,50 @@ namespace FTG.Studios {
 
             MatchFail(tokens.Dequeue(), assignment);
 
-            if (Match(tokens.Peek(), double_quote)) { // String
-                tokens.Dequeue();
-
-                node.Value = tokens.Dequeue();
-
-                MatchFail(tokens.Dequeue(), double_quote);
-            } else if (Regex.IsMatch(tokens.Peek(), number_literal)) { // Integer
-                node.Value = int.Parse(tokens.Dequeue());
-
-            } else if (Match(tokens.Peek(), open_brace)) { // Object
-                node.Value = ParseObject(tokens);
-            } else if (Match(tokens.Peek(), open_bracket)) { // List
-                tokens.Dequeue();
-
-                List<MSFObject> objects = new List<MSFObject>();
-                do {
-                    MSFObject msf = ParseObject(tokens);
-                    if (msf != null) objects.Add(msf);
-                } while (Match(tokens.Peek(), separator) && tokens.Dequeue() != null);
-
-                node.Value = objects;
-
-                MatchFail(tokens.Dequeue(), close_bracket);
-            } else {
-                Fail();
-            }
+            node.Value = ParseValue(tokens);
 
             // A node must end with a semicolon
             MatchFail(tokens.Dequeue(), semicolon);
 
             return node;
+        }
+
+        // Parse integer, string, bool, object, list
+        static object ParseValue(Queue<string> tokens) {
+            object value = null;
+            if (Match(tokens.Peek(), double_quote)) { // String
+                tokens.Dequeue();
+
+                value = tokens.Dequeue();
+
+                MatchFail(tokens.Dequeue(), double_quote);
+            } else if (Regex.IsMatch(tokens.Peek(), number_literal)) { // Integer
+
+                value = int.Parse(tokens.Dequeue());
+
+            } else if (Match(tokens.Peek(), open_brace)) { // Object
+
+                value = ParseObject(tokens);
+
+            } else if (Match(tokens.Peek(), open_bracket)) { // List
+                tokens.Dequeue();
+
+                value = new List<object>();
+                do {
+                    object val = ParseValue(tokens);
+                    if (val != null) (value as List<object>).Add(val);
+                } while (Match(tokens.Peek(), separator) && tokens.Dequeue() != null);
+
+                MatchFail(tokens.Dequeue(), close_bracket);
+            } else if (tokens.Peek() == "true") {
+                value = true;
+            } else if (tokens.Peek() == "false") {
+                value = false;
+            } else {
+                Fail();
+            }
+
+            return value;
         }
 
         static bool Match(string token, string expected) {
@@ -194,7 +218,7 @@ namespace FTG.Studios {
 
     public class MSFNode {
         public string Key;
-        public object Value; // Integer, string, object, list
+        public object Value; // Integer, string, bool, object, list
 
         public override string ToString() {
             return MSF.Serialize(this);
