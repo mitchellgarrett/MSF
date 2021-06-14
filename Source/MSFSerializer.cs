@@ -202,6 +202,10 @@ namespace FTG.Studios {
             get { return nodes.Values.ToList(); }
         }
 
+        public T Get<T>(string key) {
+            return (T)this[key].Value;
+        }
+
         public MSFNode this[string key] {
             get {
                 if (nodes.TryGetValue(key, out MSFNode node)) return node;
