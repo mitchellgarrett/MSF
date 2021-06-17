@@ -1,12 +1,12 @@
 ﻿///
-/// Mitchell's Serializable Format
+/// Mitchell's Serialization Format
 /// Author: Mitchell Garrett
 /// Copyright: 2021
 ///
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace FTG.Studios {
@@ -24,7 +24,8 @@ namespace FTG.Studios {
 
         const string singletons = @"(;|=|,|{|}|\[|\]|"")";
         const string identifier = @"^([_a-zA-Z][_a-zA-Z0-9]*)([\._a-zA-Z][_a-zA-Z0-9]*)*$";
-        const string number_literal = @"^((\d+(\.\d*)?)|(\.\d+))$";
+        const string integer_literal = @"^\d+$";
+        const string decimal_literal = @"^((\d+(\.\d*)?)|(\.\d+))$";
 
         // Convert an MSFObject back to a string
         public static string Serialize(MSFObject msf) {
@@ -137,9 +138,11 @@ namespace FTG.Studios {
                 value = tokens.Dequeue();
 
                 MatchFail(tokens.Dequeue(), double_quote);
-            } else if (Regex.IsMatch(tokens.Peek(), number_literal)) { // Integer
-
+            } else if (Regex.IsMatch(tokens.Peek(), integer_literal)) { // Integer
                 value = int.Parse(tokens.Dequeue());
+
+            } else if (Regex.IsMatch(tokens.Peek(), decimal_literal)) { // Float
+                value = float.Parse(tokens.Dequeue());
 
             } else if (Match(tokens.Peek(), open_brace)) { // Object
 
@@ -203,10 +206,10 @@ namespace FTG.Studios {
         }
 
         public T Get<T>(string key) {
-            return (T)this[key].Value;
+            return (T) this [key].Value;
         }
 
-        public MSFNode this[string key] {
+        public MSFNode this [string key] {
             get {
                 if (nodes.TryGetValue(key, out MSFNode node)) return node;
                 return null;
