@@ -7,7 +7,7 @@
 		Street = "1st Street";
 		City = "New York";
 		State = "NY";
-		ZipCode = "10000";
+		ZipCode = 10000;
 	};
 	
 	PhoneNumbers = [
